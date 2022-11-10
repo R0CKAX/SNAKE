@@ -204,4 +204,5 @@ int main()
 		Sleep(100);
 	}
 	std::cout <<std::endl<< "Game Over!";
+	Sleep(10000);
 }
