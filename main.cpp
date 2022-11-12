@@ -9,7 +9,7 @@ bool youLost;	//deklarowanie zmiennej decydujacej o tym czy mozemy kontynuowac g
 const int WIDTH = 20;	 
 const int HEIGHT = 20;
 
-int x, y, foodX, foodY, score = 0, bodyX[100], bodyY[100], length;
+int x, y, foodX, foodY, score, bodyX[100], bodyY[100], length;
 
 enum eDirection {STOP = 0, LEFT, UP, RIGHT, DOWN}dir;	//deklarowanie zbioru komend dla czesci logicznej (to co waz moze robic)
 
@@ -17,6 +17,7 @@ void Base()
 {
 	youLost = false;
 
+	//domyslne wydanie komendy STOP po to zeby na poczatku waz stal i czekal na wydanie rozkazu przez uzytkownika
 	dir = STOP;
 
 	x = WIDTH / 2;
@@ -38,6 +39,7 @@ void Draw()		//funckja rysujaca plansze gry, weza oraz spawnujaca jedzonko
 
 	for (int i = 0; i < WIDTH + 2; i++)
 	{
+		//rysowanie gornej sciany naszej planszy
 		std::cout << "#";
 	}
 	std::cout << std::endl;
@@ -48,17 +50,21 @@ void Draw()		//funckja rysujaca plansze gry, weza oraz spawnujaca jedzonko
 		{
 			if (j == 0)
 			{
+				//rysowanie lewej sciany naszej planszy
 				std::cout << "#";
 			}
 			if(i == y && j == x)
+				//zgodnie z nasza wczesniejsza deklaracja glowa weza powinna pojawic sie w "polowie" naszej planszy zarowno pod katem szerokosci jak i wysokosci czyli na x i y = 10
 				std::cout << "O";
 			else if (i == foodY && j == foodX)
 			{
+				//rysowanie znaku jedzonka (F), gdy wartosci zmiennych i oraz j beda takie same co wylosowane wartosci foodX i foodY
 				std::cout << "F";
 			}else {
 				bool draw = false;
 				for (int k = 0; k < length; k++)
 				{
+					//if odpowiadajacy za ciagle dopisywanie okreslonej ilosci znaczkow ciala zaleznej od wartosci zmiennej length
 					if (bodyX[k] == j && bodyY[k] == i)
 					{
 						std::cout << "o";
@@ -67,11 +73,13 @@ void Draw()		//funckja rysujaca plansze gry, weza oraz spawnujaca jedzonko
 				}
 				if (!draw)
 				{
+					//gdy zmienna draw pozostaje na false to caly czas "wypelniamy" srodek naszej planszy znakami spacji
 					std::cout << " ";
 				}
 			}
 			if (j == WIDTH - 1)
 			{
+				//rysowanie prawej sciany naszej planszy
 				std::cout << "#";
 			}
 		}
@@ -80,6 +88,7 @@ void Draw()		//funckja rysujaca plansze gry, weza oraz spawnujaca jedzonko
 
 	for(int i = 0; i < WIDTH + 2; i++)
 	{
+		//rysowanie dolnej sciany naszej planszy
 		std::cout << "#";
 	}
 	std::cout << std::endl;
@@ -132,7 +141,7 @@ void Logic()	//funkcja odpowiadajaca za poruszanie sie weza i sprawdzanie czy uz
 		pastY = past2Y;
 	}
 
-	//switch sterujacy naszym wezem zaleznie od wartosci zmiennej dir
+	//switch sterujacy naszym wezem zaleznie od wartosci zmiennej dir (czyli od kliknietego przez nas przycisku)
 	switch (dir)	
 	{
 		case LEFT:
@@ -150,9 +159,9 @@ void Logic()	//funkcja odpowiadajaca za poruszanie sie weza i sprawdzanie czy uz
 		default:
 		break;
 	};
-	/*
-	if (x > WIDTH || x < 0 || y > HEIGHT || y < 0) youLost = true;	//przegrana w momencie walniecia w sciane
-	*/
+	
+	//if (x > WIDTH || x < 0 || y > HEIGHT || y < 0) youLost = true;	//przegrana w momencie walniecia w sciane
+	
 	for (int i = 0; i < length; i++)	
 	{
 		//przegrywamy gdy koordynaty glowy weza "walna" w cialo
@@ -180,9 +189,10 @@ void Logic()	//funkcja odpowiadajaca za poruszanie sie weza i sprawdzanie czy uz
 		y = HEIGHT - 1;
 	}
 
-	//warunek sprawdzajacy czy uzytkownik dotarl do miejsca gdzie jest jedzonko
+	//warunek sprawdzajacy czy uzytkownik dotarl na koordynaty jedzonka
 	if (x == foodX && y == foodY)	
 	{
+		//po zebraniu jedzonka zwiekszamy wynik o 1 oraz wydluzamy weza o 1 czlon
 		score++;
 		length++;
 
@@ -194,7 +204,6 @@ void Logic()	//funkcja odpowiadajaca za poruszanie sie weza i sprawdzanie czy uz
 
 int main()
 {
-
 	Base();
 	while (!youLost)
 	{
