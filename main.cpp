@@ -9,9 +9,9 @@ bool youLost;	//deklarowanie zmiennej decydujacej o tym czy mozemy kontynuowac g
 const int WIDTH = 20;	 
 const int HEIGHT = 20;
 
-int x, y, foodX, foodY, score, bodyX[100], bodyY[100], length;
+int x, y, foodX, foodY, score=0, bodyX[100], bodyY[100], length=0;
 
-enum eDirection {STOP = 0, LEFT, UP, RIGHT, DOWN}dir;	//deklarowanie zbioru komend dla czesci logicznej (to co waz moze robic)
+enum move{STOP = 0, LEFT, UP, RIGHT, DOWN}dir;	//deklarowanie zbioru komend dla czesci logicznej (to co waz moze robic)
 
 void Base()	
 {
@@ -23,14 +23,21 @@ void Base()
 	x = WIDTH / 2;
 	y = HEIGHT / 2;
 
-	//dodawanie losowosci przy losowaniu pozycji jedzonka dla weza (zeby nie byla identyczna za kazdym podejsciem)
-	srand(time(NULL));	
+	//dodawanie losowosci
+	srand(time(NULL));
 
 	//losowanie pozycji pojawiajacego sie jedzonka
 	foodX = rand() % WIDTH;
 	foodY = rand() % HEIGHT;
+}
 
-	score = 0;
+bool IsOccupied(int _x, int _y) {
+	for (int i = 0; i < length - 1; i++) {
+		if (bodyX[i] == _x && bodyY[i] == _y) {
+			return true;
+		}
+	}
+	return false;
 }
 
 void Draw()		//funckja rysujaca plansze gry, weza oraz spawnujaca jedzonko
@@ -196,9 +203,11 @@ void Logic()	//funkcja odpowiadajaca za poruszanie sie weza i sprawdzanie czy uz
 		score++;
 		length++;
 
-		//po zebraniu jedzonka spawnujemy kolejne
-		foodX = rand() % WIDTH;
-		foodY = rand() % HEIGHT;
+		//warunek zapobiegajacy pojawieniu sie jedzonka w ciele weza
+		do {
+			foodX = rand() % WIDTH;
+			foodY = rand() % HEIGHT;
+		} while (IsOccupied(foodX, foodY));
 	}
 }
 
@@ -212,6 +221,6 @@ int main()
 		Logic();
 		Sleep(100);
 	}
-	std::cout <<std::endl<< "Game Over!";
+	std::cout << std::endl << "Game Over!";
 	Sleep(10000);
 }
